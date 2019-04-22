@@ -5,7 +5,7 @@
 # Company:            DoSec Inc.
 # Created on          2019-04-17 17:48:51
 # Last Modified by:   Billin9
-# Last Modified time: 2019-04-22 11:01:42
+# Last Modified time: 2019-04-22 11:20:39
 # Usage: ./createevernotetoken.py
 #################################################
 
@@ -47,7 +47,6 @@ class CreatedEvernoteToken(object):
         data = {
             'username': self.username,
             'password': self.password,
-            'login': '',
             'login': '登录',
             'analyticsLoginOrigin': 'login_action',
             'clipperFlow': "false",
