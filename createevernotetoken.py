@@ -5,7 +5,7 @@
 # Company:            DoSec Inc.
 # Created on          2019-04-17 17:48:51
 # Last Modified by:   Billin9
-# Last Modified time: 2019-04-22 10:57:40
+# Last Modified time: 2019-04-22 11:01:42
 # Usage: ./createevernotetoken.py
 #################################################
 
@@ -24,7 +24,6 @@ class CreatedEvernoteToken(object):
             'Host': 'app.yinxiang.com',
             'Origin': 'https://app.yinxiang.com',
             'Referer': 'https://app.yinxiang.com/Login.action',
-            'X-Requested-With': 'XMLHttpRequest',
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
         }
         self.login_url = "https://app.yinxiang.com/Login.action"
