@@ -5,7 +5,7 @@
 # Company:            DoSec Inc.
 # Created on          2019-04-17 17:48:51
 # Last Modified by:   Billin9
-# Last Modified time: 2019-04-18 12:21:32
+# Last Modified time: 2019-04-22 10:10:06
 # Usage: ./createevernotetoken.py
 #################################################
 
@@ -38,8 +38,6 @@ class CreatedEvernoteToken(object):
         html = self.session.get(self.login_url, headers=self.headers).content
         soup = BeautifulSoup(html, 'lxml')
 
-        # 获取 js 数据的两种方法
-        # https://stackoverflow.com/questions/21069294/parse-the-javascript-returned-from-beautifulsoup
         script = soup.findAll('script')[3].string
         hpts = re.search(r'hpts".*= "(.*)";', script).group(1)
         hptsh = re.search(r'hptsh".*= "(.*)";', script).group(1)
@@ -85,44 +83,44 @@ class CreatedEvernoteToken(object):
 
         token_page = self.session.get(self.token_url, headers=headers).text
         soup = BeautifulSoup(token_page, 'lxml')
-        # p = soup.findAll('p')[1].string
-        # is_already = re.search(r'Your Developer Token has already been created', p)
+        p = soup.findAll('p')[1].string
+        is_already = re.search(r'Your Developer Token has already been created', p)
 
-        # if is_already is None:
-        secret = soup.select('input[name="secret"]')[0].get('value')
-        csrfBusterToken = soup.select('input[name="csrfBusterToken"]')[0].get('value')
-        _sourcePage = soup.select('input[name="_sourcePage"]')[0].get('value')
-        __fp = soup.select('input[name="__fp"]')[0].get('value')
+        if is_already is None:
+            secret = soup.select('input[name="secret"]')[0].get('value')
+            csrfBusterToken = soup.select('input[name="csrfBusterToken"]')[0].get('value')
+            _sourcePage = soup.select('input[name="_sourcePage"]')[0].get('value')
+            __fp = soup.select('input[name="__fp"]')[0].get('value')
 
-        data = {
-            'secret': secret,
-            'csrfBusterToken': csrfBusterToken,
-            '_sourcePage': _sourcePage,
-            '__fp': __fp
-        }
+            data = {
+                'secret': secret,
+                'csrfBusterToken': csrfBusterToken,
+                '_sourcePage': _sourcePage,
+                '__fp': __fp
+            }
 
-        cdata = dict(data, **{'create': 'Create a developer token'})
-        rdata = dict(data, **{'remove': 'Revoke your developer token',
-                                        'noteStoreUrl': 'https://app.yinxiang.com/shard/s1/notestore'})
-        remove_token_page = self.session.post(self.token_url, data=rdata, headers=headers)
-        create_token_page = self.session.post(self.token_url, data=cdata, headers=headers)
+            cdata = dict(data, **{'create': 'Create a developer token'})
+            # rdata = dict(data, **{'remove': 'Revoke your developer token',
+                                            # 'noteStoreUrl': 'https://app.yinxiang.com/shard/s1/notestore'})
+            # remove_token_page = self.session.post(self.token_url, data=rdata, headers=headers)
+            create_token_page = self.session.post(self.token_url, data=cdata, headers=headers)
 
-        print('删除 token 返回状态', remove_token_page)
-        print('创建 token 返回状态', create_token_page)
+            # print('删除 token 返回状态', remove_token_page)
+            print('创建 token 返回状态', create_token_page)
 
-        soup = BeautifulSoup(create_token_page.text, 'lxml')
-        token = soup.select('#token')[0].get('value')
+            soup = BeautifulSoup(create_token_page.text, 'lxml')
+            token = soup.select('#token')[0].get('value')
 
-        sublime_settings = {
-            'noteStoreUrl': 'https://app.yinxiang.com/shard/s1/notestore',
-            'token': token
-        }
+            sublime_settings = {
+                'noteStoreUrl': 'https://app.yinxiang.com/shard/s1/notestore',
+                'token': token
+            }
 
-        with open(self.cfgpath, 'w') as f:
-            json.dump(sublime_settings, f, indent=4)
-            print('成功写入配置文件')
-        # else:
-        # print('Token 没有过期')
+            with open(self.cfgpath, 'w') as f:
+                json.dump(sublime_settings, f, indent=4)
+                print('成功写入配置文件')
+        else:
+            print('Token 没有过期')
 
 
 if __name__ == '__main__':
