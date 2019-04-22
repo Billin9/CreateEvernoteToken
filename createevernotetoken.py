@@ -5,7 +5,7 @@
 # Company:            DoSec Inc.
 # Created on          2019-04-17 17:48:51
 # Last Modified by:   Billin9
-# Last Modified time: 2019-04-22 11:20:39
+# Last Modified time: 2019-04-22 14:27:22
 # Usage: ./createevernotetoken.py
 #################################################
 
@@ -26,8 +26,9 @@ class CreatedEvernoteToken(object):
             'Referer': 'https://app.yinxiang.com/Login.action',
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
         }
-        self.login_url = "https://app.yinxiang.com/Login.action"
-        self.token_url = "https://app.yinxiang.com/api/DeveloperToken.action"
+        self.login_url = 'https://app.yinxiang.com/Login.action'
+        self.token_url = 'https://app.yinxiang.com/api/DeveloperToken.action'
+        self.store_url = 'https://app.yinxiang.com/shard/s1/notestore'
         self.session = requests.session()
         self.username = username
         self.password = password
@@ -42,19 +43,18 @@ class CreatedEvernoteToken(object):
         hptsh = re.search(r'hptsh".*= "(.*)";', script).group(1)
         _sourcePage = soup.select('input[name="_sourcePage"]')[0].get('value')
         __fp = soup.select('input[name="__fp"]')[0].get('value')
-        # print("hpts: {}, hptsh: {}, _sourcePage: {}, __fp: {}".format(hpts, hptsh, _sourcePage, __fp))
+        # print('hpts: {}, hptsh: {}, _sourcePage: {}, __fp: {}'.format(hpts, hptsh, _sourcePage, __fp))
 
         data = {
             'username': self.username,
             'password': self.password,
             'login': '登录',
             'analyticsLoginOrigin': 'login_action',
-            'clipperFlow': "false",
-            'showSwitchService': "true",
-            'usernameImmutable': "false",
+            'clipperFlow': 'false',
+            'showSwitchService': 'true',
+            'usernameImmutable': 'false',
             'hpts': hpts,
             'hptsh': hptsh,
-            'targetUrl': '/api/DeveloperToken.action',
             '_sourcePage': _sourcePage,
             '__fp': __fp
         }
@@ -99,7 +99,7 @@ class CreatedEvernoteToken(object):
 
             cdata = dict(data, **{'create': 'Create a developer token'})
             # rdata = dict(data, **{'remove': 'Revoke your developer token',
-                                            # 'noteStoreUrl': 'https://app.yinxiang.com/shard/s1/notestore'})
+                                            # 'noteStoreUrl': self.store_url})
             # remove_token_page = self.session.post(self.token_url, data=rdata, headers=headers)
             create_token_page = self.session.post(self.token_url, data=cdata, headers=headers)
 
@@ -110,7 +110,7 @@ class CreatedEvernoteToken(object):
             token = soup.select('#token')[0].get('value')
 
             sublime_settings = {
-                'noteStoreUrl': 'https://app.yinxiang.com/shard/s1/notestore',
+                'noteStoreUrl': self.store_url,
                 'token': token
             }
 
