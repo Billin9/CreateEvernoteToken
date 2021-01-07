@@ -1,5 +1,3 @@
-![Anurag’s github stats](https://github-readme-stats.vercel.app/api?username=Billin9&show_icons=true&theme=merko)
-
 # CreateEvernoteToken
 
 模拟登录印象笔记（Evernote），自动创建印象笔记开发者 Token ，写入 Evernote.sublime-settings 配置文件
