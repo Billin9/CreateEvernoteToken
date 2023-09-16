@@ -5,7 +5,7 @@
 # Company:            DoSec Inc.
 # Created on          2019-04-17 17:48:51
 # Last Modified by:   Billin9
-# Last Modified time: 2019-04-26 10:45:25
+# Last Modified time: 2022-09-05 22:12:59
 # Usage: ./createevernotetoken.py
 #################################################
 
@@ -37,8 +37,12 @@ class CreatedEvernoteToken(object):
     def get_login_info(self):
         html = self.session.get(self.login_url, headers=self.headers).content
         soup = BeautifulSoup(html, 'lxml')
+        # script_list = soup.findAll('script')
+        # print(len(script_list))
+        script = soup.findAll(text=re.compile("hpts"))[0]  # 使用正则匹配 soup class 中的 text 文本, 并返回匹配到的内容为 list
 
-        script = soup.findAll('script')[3].string
+        # script = soup.findAll('script')[5].string  # 旧方法
+        # print("========", script)
         hpts = re.search(r'hpts".*= "(.*)";', script).group(1)
         hptsh = re.search(r'hptsh".*= "(.*)";', script).group(1)
         _sourcePage = soup.select('input[name="_sourcePage"]')[0].get('value')
